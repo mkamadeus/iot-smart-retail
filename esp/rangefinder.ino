@@ -13,7 +13,7 @@ const char *SERVER = "192.168.111.111";
 const char *MQTT_UNAME = "admin";
 const char *MQTT_PWD = "admin";
 
-const char *TOPIC = "/retail/item-stock";
+const char *TOPIC = "display";
 
 char message[15];
 

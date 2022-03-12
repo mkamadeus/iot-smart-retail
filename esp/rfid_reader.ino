@@ -32,21 +32,10 @@ void setup() {
 void loop() {
   if (!rfid.PICC_IsNewCardPresent()) return;
   
-  if (rfid.PICC_ReadCardSerial()) { // NUID has been readed
-    MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
-    Serial.print("RFID/NFC Tag Type: ");
-    Serial.println(rfid.PICC_GetTypeName(piccType));
-
-    // print UID in Serial Monitor in the hex format
-    Serial.print("UID:");
-    for (int i = 0; i < rfid.uid.size; i++) {
-      Serial.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ");
-      Serial.print(rfid.uid.uidByte[i], HEX);
-    }
-    Serial.println();
-
-    rfid.PICC_HaltA(); // halt PICC
-    rfid.PCD_StopCrypto1(); // stop encryption on PCD
+  String cardId = getCardId();
+  if(cardId != "") {
+    Serial.println(cardId);
+    tapCard(cardId);
   }
 }
 
@@ -81,6 +70,21 @@ void setup_mqtt_client() {
   }
 }
 
-void check_in(char* userId) {
-  mqttClient.publish(MQTT_TAP_TOPIC, userId);
+String getCardId() {
+   if (!rfid.PICC_ReadCardSerial()) return "";
+  
+  // print UID in Serial Monitor in the hex format
+  String result = "";
+  for (int i = rfid.uid.size - 1; i >= 0; i--) {
+    result += rfid.uid.uidByte[i];
+  }
+  
+  rfid.PICC_HaltA(); // halt PICC
+  rfid.PCD_StopCrypto1(); // stop encryption on PCD
+
+  return result;
+}
+
+void tapCard(String cardId) {
+  mqttClient.publish(MQTT_TAP_TOPIC, cardId.c_str());
 }

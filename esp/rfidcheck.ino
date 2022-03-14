@@ -27,6 +27,7 @@ void setup() {
   setup_wifi();
   SPI.begin();
   rfid.PCD_Init();  
+  setup_mqtt_client();
 }
 
 void loop() {
@@ -57,6 +58,7 @@ void setup_wifi() {
 }
 
 void setup_mqtt_client() {
+  mqttClient.setServer(MQTT_BROKER_IP, 1883);
   while(!mqttClient.connected()) {
     Serial.print("Connecting to MQTT broker at ");
     Serial.println(MQTT_BROKER_IP);
@@ -65,6 +67,7 @@ void setup_mqtt_client() {
     }
     else {
       Serial.println("Failed to connect, trying again in 5 seconds");
+      Serial.println(mqttClient.state());
       delay(5000);
     }
   }
@@ -86,5 +89,8 @@ String getCardId() {
 }
 
 void tapCard(String cardId) {
+  if(!mqttClient.connected()) {
+    setup_mqtt_client();
+  }
   mqttClient.publish(MQTT_TAP_TOPIC, cardId.c_str());
 }

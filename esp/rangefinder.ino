@@ -15,19 +15,23 @@ const char *MQTT_PWD = "admin";
 
 const char *TOPIC = "display";
 
+const int THRESHOLD = 25;
+
 char message[15];
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 int PORT = 1883;
 
-void connectToWiFi() {
+void connectToWiFi()
+{
   Serial.print("Connecting to ");
 
   WiFi.begin(SSID, PWD);
   Serial.print(SSID);
 
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     Serial.print(".");
     Serial.println("");
     delay(500);
@@ -35,25 +39,32 @@ void connectToWiFi() {
   Serial.println("Connected.");
 }
 
-void initMQTT() {
+void initMQTT()
+{
   client.setServer(SERVER, PORT);
 }
 
-void reconnect() {
+void reconnect()
+{
   Serial.println("Connecting to MQTT Broker...");
-  while (!client.connected()) {
+  while (!client.connected())
+  {
     Serial.println("Reconnecting to MQTT Broker...");
     String clientId = "ESP32Client";
 
-    if (client.connect(clientId.c_str(), MQTT_UNAME, MQTT_PWD)) {
+    if (client.connect(clientId.c_str(), MQTT_UNAME, MQTT_PWD))
+    {
       Serial.println("Connected to MQTT Broker");
-    } else {
+    }
+    else
+    {
       delay(2000); // retry connecting every 2 second
     }
   }
 }
 
-void setup() {
+void setup()
+{
   // put your setup code here, to run once:
   pinMode(triggerPin, OUTPUT);
   pinMode(echoPin, INPUT);
@@ -63,27 +74,34 @@ void setup() {
   initMQTT();
 }
 
-void loop() {
-  if (!client.connected()) {
+void loop()
+{
+  if (!client.connected())
+  {
     reconnect();
   }
   client.loop();
-  
+
   unsigned int pulse, cm;
   digitalWrite(triggerPin, LOW);
   delayMicroseconds(2);
   digitalWrite(triggerPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(triggerPin, LOW);
-  
+
   pulse = pulseIn(echoPin, HIGH);
   cm = pulse / 58.0;
 
-  if (cm > 10) {
+  if (cm > THRESHOLD)
+  {
     snprintf(message, 15, "Stok habis");
     client.publish(TOPIC, message);
-  } else {
+  }
+  else
+  {
     snprintf(message, 15, "Stok ada");
     client.publish(TOPIC, message);
   }
+
+  delay(900_000);
 }

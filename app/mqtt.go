@@ -4,7 +4,7 @@ import (
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
-func InitializeMQTTClient(config Config) (*mqtt.Client, error) {
+func NewMQTTClient(config *Config) (*mqtt.Client, error) {
 
 	opts := mqtt.NewClientOptions()
 	opts.AddBroker(config.MQTT.ServerURL)

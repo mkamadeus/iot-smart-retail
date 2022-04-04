@@ -12,9 +12,9 @@ func main() {
 		panic(err)
 	}
 
-	a, err := app.GetApp()
+	a, err := app.InitializeApp()
 	if err != nil {
 		panic(err)
 	}
-	a.Listen(":8080")
+	a.Server.Listen(":8080")
 }

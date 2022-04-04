@@ -9,6 +9,7 @@ require (
 	github.com/eclipse/paho.mqtt.golang v1.3.5 // indirect
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/gofiber/fiber/v2 v2.28.0 // indirect
+	github.com/google/subcommands v1.0.1 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/google/wire v0.5.0 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
@@ -25,6 +26,7 @@ require (
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/klauspost/compress v1.14.1 // indirect
 	github.com/mattn/go-sqlite3 v1.14.12 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.33.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
@@ -33,6 +35,7 @@ require (
 	golang.org/x/net v0.0.0-20220111093109-d55c255bac03 // indirect
 	golang.org/x/sys v0.0.0-20220111092808-5a964db01320 // indirect
 	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/tools v0.0.0-20200103221440-774c71fcf114 // indirect
 	gorm.io/driver/postgres v1.3.3 // indirect
 	gorm.io/driver/sqlite v1.3.1 // indirect
 	gorm.io/gorm v1.23.2 // indirect

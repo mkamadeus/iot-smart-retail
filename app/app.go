@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
-func InitializeFiberApp() *fiber.App {
+func NewFiberApp() *fiber.App {
 	// init app
 	app := fiber.New()
 

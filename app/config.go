@@ -34,7 +34,7 @@ type cacheConfig struct {
 	Password string
 }
 
-func GetConfig() (*Config, error) {
+func NewConfig() (*Config, error) {
 	port, err := strconv.Atoi(os.Getenv("PORT"))
 	if err != nil {
 		return nil, err

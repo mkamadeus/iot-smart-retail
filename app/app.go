@@ -12,10 +12,6 @@ func InitializeFiberApp() *fiber.App {
 
 	// middlewares
 	app.Use(cors.New())
-	// app.Use(timeout.New(func(ctx *fiber.Ctx) error {
-	// 	err := ctx.JSON("request timeout")
-	// 	return err
-	// }, 5*time.Second))
 	app.Use(logger.New())
 
 	app.Get("/", func(ctx *fiber.Ctx) error {

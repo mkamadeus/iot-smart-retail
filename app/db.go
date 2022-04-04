@@ -1,13 +1,16 @@
 package app
 
 import (
+	"fmt"
+
 	"github.com/mkamadeus/iot-smart-retail/models"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func InitializeDB() (*gorm.DB, error) {
-	db, err := gorm.Open(sqlite.Open("iot.db"), &gorm.Config{})
+func InitializeDB(config Config) (*gorm.DB, error) {
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s", config.Database.Host, config.Database.Port, config.Database.User, config.Database.Password, config.Database.Database)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}

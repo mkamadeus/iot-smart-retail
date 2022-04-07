@@ -20,6 +20,7 @@ func NewFiberServer(handlers *handler.Handler) *fiber.App {
 	})
 
 	// users
+	app.Post("/users", handlers.User.Create)
 	app.Get("/users", handlers.User.GetAll)
 	app.Get("/users/:id", handlers.User.Get)
 

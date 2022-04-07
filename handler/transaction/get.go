@@ -1,4 +1,4 @@
-package user
+package transaction
 
 import (
 	"github.com/gofiber/fiber/v2"
@@ -12,9 +12,9 @@ func (h *Handler) Get(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	user, err := h.Service.Get(&converted)
+	txn, err := h.Service.Get(&converted)
 	if err != nil {
 		return err
 	}
-	return ctx.JSON(user.BuildResponse())
+	return ctx.JSON(txn.BuildResponse())
 }

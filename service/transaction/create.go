@@ -1,4 +1,4 @@
-package user
+package transaction
 
 import "github.com/mkamadeus/iot-smart-retail/models"
 

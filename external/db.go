@@ -1,15 +1,16 @@
-package app
+package external
 
 import (
 	"fmt"
 
+	"github.com/mkamadeus/iot-smart-retail/config"
 	"github.com/mkamadeus/iot-smart-retail/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func NewDB(config *Config) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s", config.Database.Host, config.Database.Port, config.Database.User, config.Database.Password, config.Database.Database)
+func NewDB(c *config.Config) (*gorm.DB, error) {
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s", c.Database.Host, c.Database.Port, c.Database.User, c.Database.Password, c.Database.Database)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err

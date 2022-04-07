@@ -6,15 +6,15 @@ import (
 )
 
 func main() {
-	// dotenv
 	err := godotenv.Load()
 	if err != nil {
 		panic(err)
 	}
 
-	a, err := app.InitializeApp()
+	app, err := app.InitializeApp()
 	if err != nil {
 		panic(err)
 	}
-	a.Server.Listen(":8080")
+
+	app.Listen()
 }

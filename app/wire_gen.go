@@ -7,47 +7,40 @@
 package app
 
 import (
-	"github.com/eclipse/paho.mqtt.golang"
-	"github.com/go-redis/redis/v8"
-	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
+	"github.com/mkamadeus/iot-smart-retail/config"
+	"github.com/mkamadeus/iot-smart-retail/external"
+	"github.com/mkamadeus/iot-smart-retail/handler"
+	user2 "github.com/mkamadeus/iot-smart-retail/handler/user"
+	"github.com/mkamadeus/iot-smart-retail/service/user"
 )
 
-// Injectors from base.go:
+// Injectors from wire.go:
 
 func InitializeApp() (*App, error) {
-	app := NewFiberApp()
-	config, err := NewConfig()
+	serverConfig, err := config.NewServerConfig()
 	if err != nil {
 		return nil, err
 	}
-	db, err := NewDB(config)
+	cacheConfig := config.NewCacheConfig()
+	databaseConfig := config.NewDatabaseConfig()
+	mqttConfig := config.NewMQTTClientConfig()
+	configConfig, err := config.New(serverConfig, cacheConfig, databaseConfig, mqttConfig)
 	if err != nil {
 		return nil, err
 	}
-	client, err := NewMQTTClient(config)
+	db, err := external.NewDB(configConfig)
 	if err != nil {
 		return nil, err
 	}
-	redisClient := NewCache(config)
-	appApp := NewApp(app, db, client, redisClient)
+	service := user.New(db)
+	userHandler := user2.New(service)
+	handlerHandler := handler.New(userHandler)
+	app := NewFiberServer(handlerHandler)
+	client, err := external.NewMQTTClient(configConfig)
+	if err != nil {
+		return nil, err
+	}
+	redisClient := external.NewCache(configConfig)
+	appApp := NewApp(app, db, client, redisClient, configConfig)
 	return appApp, nil
-}
-
-// base.go:
-
-type App struct {
-	Server         *fiber.App
-	DatabaseClient *gorm.DB
-	MQTTClient     *mqtt.Client
-	CacheClient    *redis.Client
-}
-
-func NewApp(server *fiber.App, db *gorm.DB, mc *mqtt.Client, cache *redis.Client) *App {
-	return &App{
-		Server:         server,
-		DatabaseClient: db,
-		MQTTClient:     mc,
-		CacheClient:    cache,
-	}
 }

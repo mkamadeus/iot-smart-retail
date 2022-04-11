@@ -4,10 +4,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/mkamadeus/iot-smart-retail/handler"
+	"github.com/mkamadeus/iot-smart-retail/handler/api"
 )
 
-func NewFiberServer(handlers *handler.Handler) *fiber.App {
+func NewFiberServer(handlers *api.Handler) *fiber.App {
 	// init app
 	app := fiber.New()
 

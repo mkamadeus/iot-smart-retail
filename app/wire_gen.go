@@ -8,9 +8,16 @@ package app
 
 import (
 	"github.com/mkamadeus/iot-smart-retail/config"
-	"github.com/mkamadeus/iot-smart-retail/external"
-	"github.com/mkamadeus/iot-smart-retail/handler"
-	user2 "github.com/mkamadeus/iot-smart-retail/handler/user"
+	"github.com/mkamadeus/iot-smart-retail/handler/api"
+	item2 "github.com/mkamadeus/iot-smart-retail/handler/api/item"
+	transaction2 "github.com/mkamadeus/iot-smart-retail/handler/api/transaction"
+	user2 "github.com/mkamadeus/iot-smart-retail/handler/api/user"
+	"github.com/mkamadeus/iot-smart-retail/handler/pubsub"
+	entry2 "github.com/mkamadeus/iot-smart-retail/handler/pubsub/entry"
+	"github.com/mkamadeus/iot-smart-retail/repository"
+	"github.com/mkamadeus/iot-smart-retail/service/entry"
+	"github.com/mkamadeus/iot-smart-retail/service/item"
+	"github.com/mkamadeus/iot-smart-retail/service/transaction"
 	"github.com/mkamadeus/iot-smart-retail/service/user"
 )
 
@@ -28,19 +35,26 @@ func InitializeApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := external.NewDB(configConfig)
+	db, err := repository.NewDB(configConfig)
 	if err != nil {
 		return nil, err
 	}
 	service := user.New(db)
-	userHandler := user2.New(service)
-	handlerHandler := handler.New(userHandler)
-	app := NewFiberServer(handlerHandler)
-	client, err := external.NewMQTTClient(configConfig)
+	handler := user2.New(service)
+	transactionService := transaction.New(db)
+	transactionHandler := transaction2.New(transactionService)
+	itemService := item.New(db)
+	itemHandler := item2.New(itemService)
+	apiHandler := api.New(handler, transactionHandler, itemHandler)
+	app := NewFiberServer(apiHandler)
+	client := repository.NewCache(configConfig)
+	entryService := entry.New(client)
+	entryHandler := entry2.New(entryService)
+	pubsubHandler := pubsub.New(entryHandler)
+	mqttClient, err := NewMQTTClient(configConfig, pubsubHandler)
 	if err != nil {
 		return nil, err
 	}
-	redisClient := external.NewCache(configConfig)
-	appApp := NewApp(app, db, client, redisClient, configConfig)
+	appApp := NewApp(app, db, mqttClient, client, configConfig)
 	return appApp, nil
 }

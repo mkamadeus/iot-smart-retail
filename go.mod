@@ -9,6 +9,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
 	github.com/joho/godotenv v1.4.0
+	github.com/valyala/fasthttp v1.33.0
 	gorm.io/driver/postgres v1.3.3
 	gorm.io/gorm v1.23.2
 )
@@ -30,7 +31,6 @@ require (
 	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/klauspost/compress v1.14.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.33.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce // indirect
 	golang.org/x/net v0.0.0-20220111093109-d55c255bac03 // indirect

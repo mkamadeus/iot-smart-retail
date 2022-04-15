@@ -15,6 +15,11 @@ func NewFiberServer(handlers *api.Handler) *fiber.App {
 	app.Use(cors.New())
 	app.Use(logger.New())
 
+	done := make(chan interface{})
+	defer close(done)
+
+	go handlers.SSE.Service.Broker(done)
+
 	app.Get("/", func(ctx *fiber.Ctx) error {
 		return ctx.JSON("smart retail")
 	})
@@ -31,6 +36,8 @@ func NewFiberServer(handlers *api.Handler) *fiber.App {
 
 	// txns
 	app.Get("/transactions/", handlers.Transaction.GetAll)
+
+	app.Get("/sse", handlers.SSE.SendToClients)
 
 	return app
 }

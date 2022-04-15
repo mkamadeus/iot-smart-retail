@@ -29,5 +29,8 @@ func NewApp(server *fiber.App, db *gorm.DB, mc *mqtt.Client, cache *redis.Client
 }
 
 func (app *App) Listen() {
-	app.Server.Listen(fmt.Sprintf(":%d", app.Config.Server.Port))
+	err := app.Server.Listen(fmt.Sprintf(":%d", app.Config.Server.Port))
+	if err != nil {
+		fmt.Println("Can't run the server")
+	}
 }

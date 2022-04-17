@@ -2,13 +2,11 @@ package entry
 
 import (
 	"context"
-
-	"github.com/google/uuid"
 )
 
-func (s *Service) CheckOut(cardId *uuid.UUID) error {
+func (s *Service) CheckOut(cardId string) error {
 	ctx := context.Background()
-	status := s.Cache.Del(ctx, cardId.String())
+	status := s.Cache.Del(ctx, cardId)
 	if status.Err() != nil {
 		return status.Err()
 	}

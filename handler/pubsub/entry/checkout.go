@@ -8,8 +8,8 @@ import (
 	"github.com/mkamadeus/iot-smart-retail/models"
 )
 
-func (h *Handler) CheckIn(c mqtt.Client, m mqtt.Message) {
-	var req models.CheckInRequest
+func (h *Handler) CheckOut(c mqtt.Client, m mqtt.Message) {
+	var req models.CheckOutRequest
 	fmt.Println(string(m.Payload()))
 	err := json.Unmarshal(m.Payload(), &req)
 
@@ -18,7 +18,7 @@ func (h *Handler) CheckIn(c mqtt.Client, m mqtt.Message) {
 		return
 	}
 
-	err = h.Service.CheckIn(req.CardID)
+	err = h.Service.CheckOut(req.CardID)
 	if err != nil {
 		return
 	}

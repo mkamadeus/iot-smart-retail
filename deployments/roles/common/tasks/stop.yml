@@ -1,0 +1,5 @@
+---
+- name: stop docker services
+  community.docker.docker_compose:
+    project_src: "{{ remote_home_dir }}/app/docker"
+    state: absent

@@ -1,0 +1,9 @@
+---
+- name: copy files
+  ansible.builtin.copy:
+    src: ../
+    dest: "{{ remote_home_dir }}/app"
+
+- name: start docker services
+  community.docker.docker_compose:
+    project_src: "{{ remote_home_dir }}/app/docker"

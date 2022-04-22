@@ -15,7 +15,14 @@ func NewDB(c *config.Config) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = db.AutoMigrate(&models.User{}, &models.Item{}, &models.Transaction{})
+
+	// setup join table
+	err = db.AutoMigrate(
+		&models.User{},
+		&models.Item{},
+		&models.Transaction{},
+		&models.Order{},
+	)
 	if err != nil {
 		return nil, err
 	}

@@ -13,3 +13,22 @@ type Order struct {
 	Item          Item
 	Count         uint
 }
+
+type ItemRequestWithCount struct {
+	TransactionID uuid.UUID `json:"transaction_id"`
+	ItemID        uuid.UUID `json:"item_id"`
+	Count         uint      `json:"count"`
+}
+
+func (r *ItemRequestWithCount) Build() *Order {
+	return &Order{
+		TransactionID: r.TransactionID,
+		ItemID:        r.ItemID,
+		Count:         r.Count,
+	}
+}
+
+type ItemResponseWithCount struct {
+	Name  string `json:"name"`
+	Count int    `json:"count"`
+}

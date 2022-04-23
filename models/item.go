@@ -11,6 +11,11 @@ type Item struct {
 	Name string
 }
 
+type ItemDAO struct {
+	ID   uuid.UUID
+	Name string
+}
+
 type CreateItemRequest struct {
 	Name string `json:"name"`
 }
@@ -27,7 +32,7 @@ type ItemResponse struct {
 	Name string    `json:"name"`
 }
 
-func (i *Item) BuildResponse() *ItemResponse {
+func (i *ItemDAO) BuildResponse() *ItemResponse {
 	return &ItemResponse{
 		ID:   i.ID,
 		Name: i.Name,

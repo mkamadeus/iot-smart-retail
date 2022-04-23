@@ -1,13 +1,21 @@
 package transaction
 
-import "github.com/mkamadeus/iot-smart-retail/service/transaction"
+import (
+	"github.com/mkamadeus/iot-smart-retail/service/item"
+	"github.com/mkamadeus/iot-smart-retail/service/order"
+	"github.com/mkamadeus/iot-smart-retail/service/transaction"
+)
 
 type Handler struct {
-	Service *transaction.Service
+	TransactionService *transaction.Service
+	ItemService        *item.Service
+	OrderService       *order.Service
 }
 
-func New(service *transaction.Service) *Handler {
+func New(txn *transaction.Service, item *item.Service, order *order.Service) *Handler {
 	return &Handler{
-		Service: service,
+		TransactionService: txn,
+		ItemService:        item,
+		OrderService:       order,
 	}
 }

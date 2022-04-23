@@ -17,6 +17,7 @@ import (
 	"github.com/mkamadeus/iot-smart-retail/repository"
 	"github.com/mkamadeus/iot-smart-retail/service/entry"
 	"github.com/mkamadeus/iot-smart-retail/service/item"
+	"github.com/mkamadeus/iot-smart-retail/service/order"
 	"github.com/mkamadeus/iot-smart-retail/service/transaction"
 	"github.com/mkamadeus/iot-smart-retail/service/user"
 )
@@ -42,8 +43,9 @@ func InitializeApp() (*App, error) {
 	service := user.New(db)
 	handler := user2.New(service)
 	transactionService := transaction.New(db)
-	transactionHandler := transaction2.New(transactionService)
 	itemService := item.New(db)
+	orderService := order.New(db)
+	transactionHandler := transaction2.New(transactionService, itemService, orderService)
 	itemHandler := item2.New(itemService)
 	apiHandler := api.New(handler, transactionHandler, itemHandler)
 	app := NewFiberServer(apiHandler)

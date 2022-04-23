@@ -3,6 +3,7 @@ package transaction
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"github.com/mkamadeus/iot-smart-retail/models"
 )
 
 func (h *Handler) Get(ctx *fiber.Ctx) error {
@@ -12,9 +13,17 @@ func (h *Handler) Get(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	txn, err := h.Service.Get(&converted)
+	txn, err := h.TransactionService.Get(&converted)
 	if err != nil {
 		return err
 	}
-	return ctx.JSON(txn.BuildResponse())
+
+	response := &models.TransactionResponse{
+		ID:     txn.ID,
+		UserID: txn.UserID,
+	}
+
+	// get items
+
+	return ctx.JSON(response)
 }

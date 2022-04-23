@@ -1,9 +1,12 @@
 SELECT 
 	transactions.id as id, 
 	users.id as user_id, 
-	jsonb_agg(jsonb_build_object('items', orders.item_id)) as items
+	jsonb_agg(jsonb_build_object(
+		'id', orders.item_id,
+		'name', items.name
+	)) as items
 FROM transactions
 INNER JOIN users ON users.id = transactions.user_id
 INNER JOIN orders ON transactions.id = orders.transaction_id
-GROUP BY transactions.id, users.id
-LIMIT 1;
+INNER JOIN items ON orders.item_id = items.id
+GROUP BY transactions.id, users.id;

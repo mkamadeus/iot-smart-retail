@@ -29,6 +29,7 @@ func NewFiberServer(handlers *api.Handler) *fiber.App {
 	app.Get("/items", handlers.Item.GetAll)
 
 	// txns
+	app.Get("/transactions/", handlers.Transaction.GetAll)
 	app.Get("/transactions/:id", handlers.Transaction.Get)
 
 	return app

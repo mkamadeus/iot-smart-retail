@@ -3,7 +3,8 @@ SELECT
 	users.id as user_id, 
 	jsonb_agg(jsonb_build_object(
 		'id', orders.item_id,
-		'name', items.name
+		'name', items.name,
+		'count', orders.count
 	)) as items
 FROM transactions
 INNER JOIN users ON users.id = transactions.user_id

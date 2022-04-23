@@ -6,21 +6,21 @@ import (
 	"github.com/mkamadeus/iot-smart-retail/models"
 )
 
-func (h *Handler) Get(ctx *fiber.Ctx) error {
+func (h *Handler) GetByUserID(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 	converted, err := uuid.Parse(id)
 	if err != nil {
 		return err
 	}
 
-	txn, err := h.TransactionService.Get(&converted)
+	txns, err := h.TransactionService.GetByUserID(&converted)
 	if err != nil {
 		return err
 	}
 
-	response := &models.TransactionResponse{
-		ID:     txn.ID,
-		UserID: txn.UserID,
+	response := make([]*models.TransactionResponse, len(txns))
+	for i, txn := range txns {
+		response[i] = txn.BuildResponse()
 	}
 
 	// get items

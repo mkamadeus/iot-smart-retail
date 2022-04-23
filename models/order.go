@@ -27,8 +27,3 @@ func (r *ItemRequestWithCount) Build() *Order {
 		Count:         r.Count,
 	}
 }
-
-type ItemResponseWithCount struct {
-	Name  string `json:"name"`
-	Count int    `json:"count"`
-}

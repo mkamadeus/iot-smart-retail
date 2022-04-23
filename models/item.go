@@ -16,6 +16,12 @@ type ItemDAO struct {
 	Name string
 }
 
+type ItemWithCountDAO struct {
+	ID    uuid.UUID
+	Name  string
+	Count uint
+}
+
 type CreateItemRequest struct {
 	Name string `json:"name"`
 }
@@ -32,9 +38,23 @@ type ItemResponse struct {
 	Name string    `json:"name"`
 }
 
+type ItemResponseWithCount struct {
+	ID    uuid.UUID `json:"id"`
+	Name  string    `json:"name"`
+	Count uint      `json:"count"`
+}
+
 func (i *ItemDAO) BuildResponse() *ItemResponse {
 	return &ItemResponse{
 		ID:   i.ID,
 		Name: i.Name,
+	}
+}
+
+func (i *ItemWithCountDAO) BuildResponse() *ItemResponseWithCount {
+	return &ItemResponseWithCount{
+		ID:    i.ID,
+		Name:  i.Name,
+		Count: i.Count,
 	}
 }

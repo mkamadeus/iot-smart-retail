@@ -1,8 +1,6 @@
 package models
 
 import (
-	"fmt"
-
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -17,7 +15,7 @@ type Transaction struct {
 type TransactionDAO struct {
 	ID     uuid.UUID
 	UserID uuid.UUID
-	Items  []ItemDAO
+	Items  []ItemWithCountDAO
 }
 
 type CreateTransactionRequest struct {
@@ -26,9 +24,9 @@ type CreateTransactionRequest struct {
 }
 
 type TransactionResponse struct {
-	ID     uuid.UUID             `json:"id"`
-	UserID uuid.UUID             `json:"user_id"`
-	Items  ItemResponseWithCount `json:"items"`
+	ID     uuid.UUID                `json:"id"`
+	UserID uuid.UUID                `json:"user_id"`
+	Items  []*ItemResponseWithCount `json:"items"`
 }
 
 func (r *CreateTransactionRequest) Build() *Transaction {
@@ -40,15 +38,14 @@ func (r *CreateTransactionRequest) Build() *Transaction {
 
 func (t *TransactionDAO) BuildResponse() *TransactionResponse {
 
-	fmt.Println(t)
-	// itemResponses := make([]*ItemResponse, len(t.Items))
-	// for i, item := range t.Items {
-	// 	itemResponses[i] = item.BuildResponse()
-	// }
+	itemResponses := make([]*ItemResponseWithCount, len(t.Items))
+	for i, item := range t.Items {
+		itemResponses[i] = item.BuildResponse()
+	}
 
 	return &TransactionResponse{
 		ID:     t.ID,
 		UserID: t.UserID,
-		// Items:  itemResponses,
+		Items:  itemResponses,
 	}
 }

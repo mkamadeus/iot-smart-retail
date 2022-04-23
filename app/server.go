@@ -23,6 +23,7 @@ func NewFiberServer(handlers *api.Handler) *fiber.App {
 	app.Post("/users", handlers.User.Create)
 	app.Get("/users", handlers.User.GetAll)
 	app.Get("/users/:id", handlers.User.Get)
+	app.Get("/users/:id/transactions", handlers.Transaction.GetByUserID)
 
 	// items
 	app.Post("/items", handlers.Item.Create)
@@ -30,7 +31,6 @@ func NewFiberServer(handlers *api.Handler) *fiber.App {
 
 	// txns
 	app.Get("/transactions/", handlers.Transaction.GetAll)
-	app.Get("/transactions/:id", handlers.Transaction.Get)
 
 	return app
 }

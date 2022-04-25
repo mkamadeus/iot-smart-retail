@@ -1,11 +1,13 @@
 import random
 import pandas as pd
-import numpy as np
+import psycopg2
+import json
 from faker import Faker
 import uuid
 import secrets
 
 df = pd.read_excel("transactions.xlsx")
+print(df.head())
 
 #1
 customer_ids = df['Customer_ID'].unique()
@@ -37,14 +39,15 @@ userset = list(map(lambda user: {
 	"id": user, 
 	"name": fake.name(),
 	"card_id": secrets.token_hex(12),
-	"birhtdate": fake.iso8601(),
+	"birthdate": fake.iso8601(),
 	"gender": fake.bothify(letters='MF', text='?')
 }, result[:, 0]))
 
 # transaction
+print(result[0])
 txnset = list(map(lambda dt: {
-	"id": dt[0],
-	"user_id": dt[1],
+	"id": dt[1],
+	"user_id": dt[0],
 }, result[:, 0:2]))
 
 # order
@@ -59,11 +62,45 @@ for row in result:
 			"count": random.randint(1,100)
 		})
 	orderset.append(rowresult)
-# TODO: input items to db
 
+with open("secrets.json", "r") as f:
+	CONFIG = json.load(f)
 
+conn = psycopg2.connect("dbname=%s user=%s password=%s host=%s" % (CONFIG["db_name"], CONFIG["db_user"], CONFIG["db_pass"], CONFIG["db_host"]))
 
-print(itemset)
-print(userset[0])
-print(txnset[0])
-print(orderset[0])
+cur = conn.cursor()
+try:
+
+	# users
+	print('users')
+	for u in userset:
+		cur.execute("INSERT INTO users (id, name, card_id, birthdate, gender) VALUES (%s, %s, %s, %s, %s)", (u['id'], u['name'], u['card_id'], u['birthdate'], u['gender']))
+
+	conn.commit()
+
+	# items
+	print('items')
+	for i in itemset.values():
+		cur.execute("INSERT INTO items (id, name) VALUES (%s, %s)", (i['id'], i['name']))
+
+	conn.commit()
+
+	# transactions
+	print('txns')
+	for t in txnset:
+		cur.execute("INSERT INTO transactions (id, user_id) VALUES (%s, %s)", (t['id'], t['user_id']))
+
+	conn.commit()
+
+	# orders
+	print('orders')
+	for o in orderset:
+		for oi in o:
+			cur.execute("INSERT INTO orders (transaction_id, item_id, count) VALUES (%s, %s, %s)", (oi['transaction_id'], oi['item_id'], oi['count']))
+
+	conn.commit()
+
+except Exception as e:
+	print(e)
+finally:
+	cur.close()

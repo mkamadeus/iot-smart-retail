@@ -10,5 +10,5 @@ FROM transactions
 INNER JOIN users ON users.id = transactions.user_id
 INNER JOIN orders ON transactions.id = orders.transaction_id
 INNER JOIN items ON orders.item_id = items.id
-GROUP BY transactions.id, users.id
-WHERE orders.;
+WHERE transactions.transaction_id = ?
+GROUP BY transactions.id, users.id;

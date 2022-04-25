@@ -1,11 +1,14 @@
 import psycopg2
+import json
 
-# Connect to your postgres DB
-conn = psycopg2.connect("dbname=%s user=%s password=%s")
-# Open a cursor to perform database operations
+with open("secrets.json", "r") as f:
+	CONFIG = json.load(f)
+
+conn = psycopg2.connect("dbname=%s user=%s password=%s" % (CONFIG["db_name"], CONFIG["db_user"], CONFIG["db_pass"]))
+
 cur = conn.cursor()
 
-# Execute a query
+# insert 
 cur.execute("SELECT * FROM my_data")
 
 # Retrieve query results

@@ -9,7 +9,7 @@ services:
     volumes:
       - ./config/mosquitto.conf:/mosquitto/config/mosquitto.conf
   cache:
-    image: bitnami/redis:latest
+    image: redis
     container_name: redis
     ports:
       - 6379:6379

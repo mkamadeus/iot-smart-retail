@@ -15,12 +15,13 @@ type Handler struct {
 	SSE         *sse.Handler
 }
 
-var HandlerSet = wire.NewSet(New, user.New, item.New, transaction.New)
+var HandlerSet = wire.NewSet(New, user.New, item.New, transaction.New, sse.New)
 
-func New(uh *user.Handler, th *transaction.Handler, ih *item.Handler) *Handler {
+func New(uh *user.Handler, th *transaction.Handler, ih *item.Handler, sseh *sse.Handler) *Handler {
 	return &Handler{
 		User:        uh,
 		Transaction: th,
 		Item:        ih,
+		SSE:         sseh,
 	}
 }

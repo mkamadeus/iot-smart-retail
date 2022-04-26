@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/valyala/fasthttp"
+	"strings"
 )
 
 func (h *Handler) SendToClients(ctx *fiber.Ctx) error {
@@ -16,20 +17,23 @@ func (h *Handler) SendToClients(ctx *fiber.Ctx) error {
 	sseChannel := make(chan string)
 	h.Service.Clients = append(h.Service.Clients, sseChannel)
 
-	defer func() {
-		close(sseChannel)
-		sseChannel = nil
-	}()
-
 	ctx.Context().SetBodyStreamWriter(fasthttp.StreamWriter(func(w *bufio.Writer) {
 		for {
 			data := <-sseChannel
-			fmt.Printf("data: %v \n\n", data)
-			fmt.Fprintf(w, "data: %v \n\n", data)
+			parsedMessage := splitByDash(data)
+			fmt.Fprintf(w, "event: %s\ndata: %s\n\n", parsedMessage[0], parsedMessage[1])
 
 			w.Flush()
 		}
 	}))
-
 	return nil
+}
+
+func splitByDash(s string) []string {
+	return strings.FieldsFunc(s, func(r rune) bool {
+		if r == '-' {
+			return true
+		}
+		return false
+	})
 }

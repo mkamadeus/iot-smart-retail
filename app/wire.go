@@ -14,6 +14,7 @@ import (
 
 func InitializeApp() (*App, error) {
 	wire.Build(
+		NewRoutine,
 		NewApp,
 		NewFiberServer,
 		NewMQTTClient,

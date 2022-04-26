@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -15,12 +16,8 @@ func NewFiberServer(handlers *api.Handler) *fiber.App {
 	app.Use(cors.New())
 	app.Use(logger.New())
 
-	done := make(chan interface{})
-	defer close(done)
-
-	go handlers.SSE.Service.Broker(done)
-
 	app.Get("/", func(ctx *fiber.Ctx) error {
+		fmt.Println("Hello world")
 		return ctx.JSON("smart retail")
 	})
 

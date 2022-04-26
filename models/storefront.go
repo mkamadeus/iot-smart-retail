@@ -1,5 +1,5 @@
 package models
 
 type MQTTMessage struct {
-	Message string `json:"message"`
+	Message string
 }

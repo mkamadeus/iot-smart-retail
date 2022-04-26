@@ -21,6 +21,7 @@ func NewMQTTClient(c *config.Config, handlers *pubsub.Handler) (*mqtt.Client, er
 	}
 
 	client.Subscribe(c.MQTT.TapTopic, 1, handlers.Entry.CheckIn)
+	client.Subscribe(c.MQTT.DisplayTopic, 1, handlers.Storefront.ReceiveMessage)
 
 	return &client, nil
 

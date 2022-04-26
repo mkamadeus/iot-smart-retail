@@ -12,16 +12,6 @@ func (h *Handler) Create(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	// check item validity
-	items := make([]*models.ItemResponse, len(request.ItemIDs))
-	for _, itemID := range request.ItemIDs {
-		item, err := h.ItemService.Get(itemID)
-		if err != nil {
-			return err
-		}
-		items = append(items, item.BuildResponse())
-	}
-
 	// build txns
 	txn := request.Build()
 	created, err := h.TransactionService.Create(txn)

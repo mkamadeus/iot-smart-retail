@@ -1,0 +1,5 @@
+- name: Drop Database
+  community.postgresql.postgresql_db:
+    name: "{{ database_name }}"
+    state: "absent"
+    force: true

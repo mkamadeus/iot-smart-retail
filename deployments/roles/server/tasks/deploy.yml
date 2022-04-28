@@ -1,7 +1,7 @@
 ---
 - name: copy files
   ansible.builtin.copy:
-    src: ../
+    src: "{{ playbook_dir }}/.."
     dest: "{{ remote_home_dir }}/app"
 
 - name: start docker services

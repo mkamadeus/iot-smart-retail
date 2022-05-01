@@ -10,14 +10,17 @@ import (
 	"github.com/mkamadeus/iot-smart-retail/config"
 	"github.com/mkamadeus/iot-smart-retail/handler/api"
 	item2 "github.com/mkamadeus/iot-smart-retail/handler/api/item"
+	"github.com/mkamadeus/iot-smart-retail/handler/api/sse"
 	transaction2 "github.com/mkamadeus/iot-smart-retail/handler/api/transaction"
 	user2 "github.com/mkamadeus/iot-smart-retail/handler/api/user"
 	"github.com/mkamadeus/iot-smart-retail/handler/pubsub"
 	entry2 "github.com/mkamadeus/iot-smart-retail/handler/pubsub/entry"
+	storefront2 "github.com/mkamadeus/iot-smart-retail/handler/pubsub/storefront"
 	"github.com/mkamadeus/iot-smart-retail/repository"
 	"github.com/mkamadeus/iot-smart-retail/service/entry"
 	"github.com/mkamadeus/iot-smart-retail/service/item"
 	"github.com/mkamadeus/iot-smart-retail/service/order"
+	"github.com/mkamadeus/iot-smart-retail/service/storefront"
 	"github.com/mkamadeus/iot-smart-retail/service/transaction"
 	"github.com/mkamadeus/iot-smart-retail/service/user"
 )
@@ -47,16 +50,20 @@ func InitializeApp() (*App, error) {
 	orderService := order.New(db)
 	transactionHandler := transaction2.New(transactionService, itemService, orderService)
 	itemHandler := item2.New(itemService)
-	apiHandler := api.New(handler, transactionHandler, itemHandler)
+	storefrontService := storefront.New()
+	sseHandler := sse.New(storefrontService)
+	apiHandler := api.New(handler, transactionHandler, itemHandler, sseHandler)
 	app := NewFiberServer(apiHandler)
 	client := repository.NewCache(configConfig)
 	entryService := entry.New(client)
 	entryHandler := entry2.New(entryService)
-	pubsubHandler := pubsub.New(entryHandler)
+	storefrontHandler := storefront2.New(storefrontService)
+	pubsubHandler := pubsub.New(entryHandler, storefrontHandler)
 	mqttClient, err := NewMQTTClient(configConfig, pubsubHandler)
 	if err != nil {
 		return nil, err
 	}
-	appApp := NewApp(app, db, mqttClient, client, configConfig)
+	sseRoutine := NewRoutine(apiHandler)
+	appApp := NewApp(app, db, mqttClient, client, configConfig, sseRoutine)
 	return appApp, nil
 }

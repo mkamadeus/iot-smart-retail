@@ -16,19 +16,24 @@ type App struct {
 	MQTTClient     *mqtt.Client
 	CacheClient    *redis.Client
 	Config         *config.Config
+	SSERoutine     *SSERoutine
 }
 
-func NewApp(server *fiber.App, db *gorm.DB, mc *mqtt.Client, cache *redis.Client, conf *config.Config) *App {
+func NewApp(server *fiber.App, db *gorm.DB, mc *mqtt.Client, cache *redis.Client, conf *config.Config, sseRoutine *SSERoutine) *App {
 	return &App{
 		Server:         server,
 		DatabaseClient: db,
 		MQTTClient:     mc,
 		CacheClient:    cache,
 		Config:         conf,
+		SSERoutine:     sseRoutine,
 	}
 }
 
 func (app *App) Listen() {
+	done := make(chan interface{})
+	defer close(done)
+	app.SSERoutine.Run(done)
 	err := app.Server.Listen(fmt.Sprintf(":%d", app.Config.Server.Port))
 	if err != nil {
 		fmt.Println("Can't run the server")

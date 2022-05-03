@@ -1,31 +1,32 @@
 version: "3.8"
 services:
-  service:
-    container_name: smart-retail-service1
-    build:
-      context: ../
-      dockerfile: Dockerfile
-    ports:
-      - 8080:8080
-    environment:
-      - PORT=8080
-      - MQTT_SERVER_URL="tcp://127.0.0.1:1883"
-      - MQTT_CLIENT_ID="smart-retail-api"
-      - MQTT_TAP_TOPIC="tap"
-      - MQTT_REGISTER_TOPIC="register"
-      - MQTT_DISPLAY_TOPIC="display"
-      - POSTGRES_HOST="postgres"
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER="postgres"
-      - POSTGRES_PASSWORD="password"
-      - POSTGRES_DATABASE="iot"
-      - REDIS_HOST="127.0.0.1"
-      - REDIS_PORT=6439
-      - REDIS_PASSWORD="password"
-    depends_on:
-      - broker
-      - cache
-      - postgres
+  # service:
+  #   container_name: smart-retail-service
+  #   build:
+  #     context: ../
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 8080:8080
+  #   restart: always
+  #   environment:
+  #     - PORT=8080
+  #     - MQTT_SERVER_URL="tcp://127.0.0.1:1883"
+  #     - MQTT_CLIENT_ID="smart-retail-api"
+  #     - MQTT_TAP_TOPIC="tap"
+  #     - MQTT_REGISTER_TOPIC="register"
+  #     - MQTT_DISPLAY_TOPIC="display"
+  #     - POSTGRES_HOST="postgres"
+  #     - POSTGRES_PORT=5432
+  #     - POSTGRES_USER="postgres"
+  #     - POSTGRES_PASSWORD="password"
+  #     - POSTGRES_DATABASE="iot"
+  #     - REDIS_HOST="127.0.0.1"
+  #     - REDIS_PORT=6439
+  #     - REDIS_PASSWORD="password"
+  #   depends_on:
+  #     - broker
+  #     - cache
+  #     - postgres
   broker:
     image: eclipse-mosquitto
     container_name: mosquitto

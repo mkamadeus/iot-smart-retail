@@ -8,6 +8,7 @@ services:
       - 9001:9001
     volumes:
       - ./config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    network_mode: bridge
   cache:
     image: redis
     container_name: redis
@@ -15,6 +16,7 @@ services:
       - 6379:6379
     environment:
       - REDIS_PASSWORD=password
+    network_mode: bridge
   postgres:
     image: postgres
     container_name: postgres
@@ -22,3 +24,4 @@ services:
       - 5432:5432
     environment:
       - POSTGRES_PASSWORD=password
+    network_mode: bridge

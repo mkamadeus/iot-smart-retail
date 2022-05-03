@@ -1,2 +1,22 @@
-- name: Setup Docker
-  include_tasks: setup_docker.yml
+---
+- name: zip files
+  delegate_to: localhost
+  community.general.archive:
+    path:
+      - "{{ playbook_dir }}/../*"
+    exclude_path:
+      - "{{ playbook_dir }}/../.git"
+    dest: "{{ playbook_dir }}/result.tar.gz"
+- name: copy files
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/result.tar.gz"
+    dest: "/home/{{ username }}/"
+- name: extract code
+  ansible.builtin.unarchive:
+    remote_src: yes
+    src: result.tar.gz
+    dest: "/home/{{ username }}/"
+- name: start docker services
+  community.docker.docker_compose:
+    project_src: "/home/{{ username }}/docker"
+    build: yes

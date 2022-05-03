@@ -1,0 +1,12 @@
+---
+- include_tasks:
+    file: reset.yml
+    apply:
+      tags: ["db-reset"]
+  tags: ["db-reset"]
+
+- include_tasks:
+    file: setup.yml
+    apply:
+      tags: ["db-setup"]
+  tags: ["db-setup"]

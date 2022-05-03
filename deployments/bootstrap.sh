@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-ansible-playbook -i playbook.yml
+ansible-playbook -u iot -i hosts playbook.yml $@

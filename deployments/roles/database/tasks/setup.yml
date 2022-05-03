@@ -1,5 +1,3 @@
-- name: Drop Database
+- name: "create database {{ database_name }}"
   community.postgresql.postgresql_db:
     name: "{{ database_name }}"
-    state: "absent"
-    force: true

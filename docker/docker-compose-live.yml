@@ -1,33 +1,35 @@
 version: "3.8"
 services:
-  # service:
-  #   container_name: smart-retail-service
-  #   build:
-  #     context: ../
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 8080:8080
-  #   restart: always
-  #   environment:
-  #     - PORT=8080
-  #     - MQTT_SERVER_URL="tcp://127.0.0.1:1883"
-  #     - MQTT_CLIENT_ID="smart-retail-api"
-  #     - MQTT_TAP_TOPIC="tap"
-  #     - MQTT_REGISTER_TOPIC="register"
-  #     - MQTT_DISPLAY_TOPIC="display"
-  #     - POSTGRES_HOST="postgres"
-  #     - POSTGRES_PORT=5432
-  #     - POSTGRES_USER="postgres"
-  #     - POSTGRES_PASSWORD="password"
-  #     - POSTGRES_DATABASE="iot"
-  #     - REDIS_HOST="127.0.0.1"
-  #     - REDIS_PORT=6439
-  #     - REDIS_PASSWORD="password"
-  #   depends_on:
-  #     - broker
-  #     - cache
-  #     - postgres
-  broker:
+  service:
+    container_name: smart-retail-service
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    restart: always
+    environment:
+      - PORT=${PORT}
+      - MQTT_SERVER_URL=${MQTT_SERVER_URL}
+      - MQTT_CLIENT_ID=${MQTT_CLIENT_ID}
+      - MQTT_TAP_TOPIC=${MQTT_TAP_TOPIC}
+      - MQTT_REGISTER_TOPIC=${MQTT_REGISTER_TOPIC}
+      - MQTT_DISPLAY_TOPIC=${MQTT_DISPLAY_TOPIC}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    depends_on:
+      - mosquitto
+      - redis
+      - postgres
+    networks:
+      - internal
+  mosquitto:
     image: eclipse-mosquitto
     container_name: mosquitto
     ports:
@@ -35,17 +37,27 @@ services:
       - 9001:9001
     volumes:
       - ./config/mosquitto.conf:/mosquitto/config/mosquitto.conf
-  cache:
+    networks:
+      - internal
+  redis:
     image: bitnami/redis:latest
     container_name: redis
     ports:
       - 6379:6379
     environment:
       - REDIS_PASSWORD=password
+    networks:
+      - internal
   postgres:
-    image: postgres
-    container_name: postgres
+    image: postgres:alpine
+    container_name: postgresdb
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - DATABASE_HOST=${POSTGRES_HOST}
+    networks:
+      - internal
+networks:
+  internal:
+    driver: bridge

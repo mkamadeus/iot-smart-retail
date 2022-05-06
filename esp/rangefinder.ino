@@ -15,6 +15,8 @@ const char *MQTT_PWD = "admin";
 
 const char *TOPIC = "display";
 
+const int STOREFRONT_NUM = 12;
+
 const int THRESHOLD = 25;
 
 char message[15];
@@ -94,12 +96,12 @@ void loop()
 
   if (cm > THRESHOLD)
   {
-    snprintf(message, 15, "Stok habis");
+    snprintf(message, 15, "empty-%d", STOREFRONT_NUM);
     client.publish(TOPIC, message);
   }
   else
   {
-    snprintf(message, 15, "Stok ada");
+    snprintf(message, 15, "restocked-%d", STOREFRONT_NUM);
     client.publish(TOPIC, message);
   }
 

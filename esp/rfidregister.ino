@@ -20,6 +20,8 @@ const char* MQTT_PWD = "admin";
 const char* WIFI_SSID = "XXXX";
 const char* WIFI_PASSWORD = "XXXX";
 
+char message[25];
+
 
 // clients
 MFRC522 rfid(SDA_PIN, RST_PIN);
@@ -98,5 +100,6 @@ String getCardId() {
 }
 
 void tapCard(String cardId) {
-  mqttClient.publish(MQTT_TAP_TOPIC, cardId.c_str());
+  snprintf(message, 25, "register-%s", cardId.c_str());
+  mqttClient.publish(MQTT_TAP_TOPIC, message);
 }

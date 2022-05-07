@@ -4,6 +4,7 @@ build:
 
 wire:
 	cd app && \
+	rm wire_gen.go && \
 	go run github.com/google/wire/cmd/wire && \
 	cd ..
 

@@ -36,5 +36,8 @@ func NewFiberServer(handlers *api.Handler) *fiber.App {
 
 	app.Get("/sse", handlers.SSE.SendToClients)
 
+	app.Post("/layout", handlers.Layout.UploadLayout)
+	app.Get("/layout", handlers.Layout.GetLayout)
+
 	return app
 }

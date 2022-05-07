@@ -11,6 +11,7 @@ import (
 	"github.com/mkamadeus/iot-smart-retail/handler/api"
 	item2 "github.com/mkamadeus/iot-smart-retail/handler/api/item"
 	"github.com/mkamadeus/iot-smart-retail/handler/api/sse"
+	"github.com/mkamadeus/iot-smart-retail/handler/api/storefrontlayout"
 	transaction2 "github.com/mkamadeus/iot-smart-retail/handler/api/transaction"
 	user2 "github.com/mkamadeus/iot-smart-retail/handler/api/user"
 	"github.com/mkamadeus/iot-smart-retail/handler/pubsub"
@@ -52,7 +53,8 @@ func InitializeApp() (*App, error) {
 	itemHandler := item2.New(itemService)
 	storefrontService := storefront.New()
 	sseHandler := sse.New(storefrontService)
-	apiHandler := api.New(handler, transactionHandler, itemHandler, sseHandler)
+	storefrontlayoutHandler := storefrontlayout.New(storefrontService)
+	apiHandler := api.New(handler, transactionHandler, itemHandler, sseHandler, storefrontlayoutHandler)
 	app := NewFiberServer(apiHandler)
 	client := repository.NewCache(configConfig)
 	entryService := entry.New(client)

@@ -9,3 +9,4 @@ wire:
 
 clean:
 	rm -f main
+.PHONY: build

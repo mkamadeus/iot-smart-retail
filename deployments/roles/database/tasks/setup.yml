@@ -1,0 +1,3 @@
+- name: "create database {{ database_name }}"
+  community.postgresql.postgresql_db:
+    name: "{{ database_name }}"

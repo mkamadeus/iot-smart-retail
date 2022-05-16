@@ -1,0 +1,3 @@
+database_name: "iot"
+database_user: "postgres"
+database_pass: "password"

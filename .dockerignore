@@ -1,0 +1,4 @@
+.github/
+docker/
+.env
+main

@@ -1,5 +1,11 @@
 ---
 - include_tasks:
+    file: setup-docker.yml
+    apply:
+      tags: ["setup-docker"]
+  tags: ["setup-docker"]
+
+- include_tasks:
     file: setup.yml
     apply:
       tags: ["setup"]

@@ -19,4 +19,6 @@
 - name: start docker services
   community.docker.docker_compose:
     project_src: "/home/{{ username }}/docker"
+    files:
+      - docker-compose-live.yml
     build: yes

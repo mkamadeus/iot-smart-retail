@@ -15,6 +15,14 @@ func (s *Service) UploadStoreLayout(fh *multipart.FileHeader) error {
 		return err
 	}
 
+	_, err = os.ReadDir("layout")
+	if err != nil {
+		if error := os.Mkdir("layout", 0766); error != nil {
+			return error
+		}
+		return err
+	}
+
 	fileLoc := filepath.Join(dir, "layout", "storefrontlayout.json")
 	targetLoc, err := os.OpenFile(fileLoc, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {

@@ -6,12 +6,23 @@ from pydantic import BaseSettings
 import pandas as pd
 import requests
 import json
+from fastapi.middleware.cors import CORSMiddleware
 
 class Settings(BaseSettings):
     service_url: str = "http://localhost:8080"
 
 app = FastAPI()
 settings = Settings()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():

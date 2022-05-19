@@ -29,6 +29,20 @@ services:
       - postgres
     networks:
       - internal
+  analysis:
+    container_name: smart-retail-analysis
+    build:
+      context: ../analysis
+      dockerfile: Dockerfile
+    ports:
+      - 80:8081
+    restart: always
+    environment:
+      - SERVICE_URL=${SERVICE_HOST}
+    depends_on:
+      - service
+    networks:
+      - internal
   mosquitto:
     image: eclipse-mosquitto
     container_name: mosquitto

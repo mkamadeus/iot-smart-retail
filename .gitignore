@@ -26,3 +26,5 @@ iot.db
 
 .DS_Store
 .idea
+
+layout/*.json

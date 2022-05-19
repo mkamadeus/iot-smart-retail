@@ -12,10 +12,7 @@
 
 const char* MQTT_CLIENT_NAME = "esp32-rfid";
 const char* MQTT_BROKER_IP = "192.168.100.1";
-const char* MQTT_TAP_TOPIC = "enroll";
-
-const char* MQTT_UNAME = "admin";
-const char* MQTT_PWD = "admin";
+const char* MQTT_TAP_TOPIC = "register";
 
 const char* WIFI_SSID = "XXXX";
 const char* WIFI_PASSWORD = "XXXX";
@@ -75,7 +72,7 @@ void reconnect_mqtt_client(){
     Serial.println("Reconnecting to MQTT Broker...");
     String clientId = "ESP32Client";
 
-    if (mqttClient.connect(clientId.c_str(), MQTT_UNAME, MQTT_PWD)) {
+    if (mqttClient.connect(clientId.c_str())) {
       Serial.println("Connected to MQTT Broker");
     } else {
       delay(2000); // retry connecting every 2 second

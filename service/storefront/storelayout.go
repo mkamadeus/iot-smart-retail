@@ -45,6 +45,10 @@ func (s *Service) GetStoreLayout() (models.StorefrontLayout, error) {
 	fileLoc := filepath.Join(dir, "layout", "storefrontlayout.json")
 
 	content, err := os.ReadFile(fileLoc)
+	if err != nil {
+		return result, err
+	}
+
 	if err := json.Unmarshal(content, &result); err != nil {
 		return result, err
 	}
